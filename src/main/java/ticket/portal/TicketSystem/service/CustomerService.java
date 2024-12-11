@@ -35,7 +35,6 @@ public class CustomerService {
             logger.error("Error while getting customer List: {}", e.getMessage());
             List<ErrorResponse> errors = List.of(new ErrorResponse(500, "An error occurred while Getting Customer List ", e.getMessage()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(EnvelopedResponse.fromErrorResponse(errors));
-
         }
     }
 
