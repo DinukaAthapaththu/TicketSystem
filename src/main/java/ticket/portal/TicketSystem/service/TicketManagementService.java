@@ -61,11 +61,9 @@ public class TicketManagementService {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(EnvelopedResponse.fromErrorResponse(errors));
             } else {
                 this.ticketPool = new TicketPool(config.getMaxTicketCapacity());
-//
                 addVendor(config.getTicketReleaseRate(), config.getTotalTickets(), 1);
                 addCustomer(config.getCustomerRetrivalRate(), 1);
                 logger.info("Ticket system started successfully");
-//                logStreamingService.startLogStreaming();
                 return ResponseEntity.ok(EnvelopedResponse.fromResponse("Ticket system started successfully"));
             }
 
@@ -95,9 +93,6 @@ public class TicketManagementService {
             customers.clear();
             vendorThreads.clear();
             customerThreads.clear();
-
-//            logStreamingService.stopLogStreaming();
-//            logStreamingService.clearLogFile();
             logger.info("Ticket system stopped successfully");
             return ResponseEntity.ok(EnvelopedResponse.fromResponse("Ticket system stopped successfully"));
         } catch (Exception e) {
@@ -106,7 +101,7 @@ public class TicketManagementService {
         }
     }
 
-    protected void addVendor(int ticketReleaseRate, int totalTickets, int vendorId) {
+    public void addVendor(int ticketReleaseRate, int totalTickets, int vendorId) {
         try {
             boolean isVendorExist = false;
             for (Vendor vendor : vendors) {
@@ -130,7 +125,7 @@ public class TicketManagementService {
         }
     }
 
-    protected void addCustomer(int customerRetrievalRate, int customerId) {
+    public void addCustomer(int customerRetrievalRate, int customerId) {
         try {
             boolean isCustomerExist = false;
             for (Customer customer : customers) {
@@ -139,10 +134,8 @@ public class TicketManagementService {
                     break;
                 }
             }
-
             if (isCustomerExist) {
                 throw new RuntimeException();
-//                throw new IdNotFoundException("Customer with ID " + customerId + " already exists. Skipping addition.");
             }
             Customer customer = new Customer(ticketPool, customerRetrievalRate, customerId);
             customers.add(customer);
@@ -155,7 +148,7 @@ public class TicketManagementService {
         }
     }
 
-    protected void removeVendor(String vendorId) {
+    public void removeVendor(String vendorId) {
         try {
             int vendorIdInt = Integer.parseInt(vendorId);
             Vendor vendorToRemove = null;
@@ -166,7 +159,7 @@ public class TicketManagementService {
                 }
             }
             if (vendorToRemove != null) {
-                vendorToRemove.stopVendor();  // Stop the vendor's thread
+                vendorToRemove.stopVendor();
                 vendors.remove(vendorToRemove);
                 logger.info("Vendor {} has been removed.", vendorId);
             } else {
@@ -179,7 +172,7 @@ public class TicketManagementService {
         }
     }
 
-    protected void removeCustomer(String customerId) {
+    public void removeCustomer(String customerId) {
         try {
             int customerIdInt = Integer.parseInt(customerId);
             Customer customerToRemove = null;
